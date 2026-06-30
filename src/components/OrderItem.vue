@@ -49,7 +49,10 @@ const formattedUAH = computed(() => `${totalUAH.value.toFixed(2)} UAH`);
         <!-- <a href="#" class="card-link">Card link</a>
         <a href="#" class="card-link">Another link</a> -->
         <div class="order-item__action">
-          <button type="button" class="btn btn-light order-item__btn-delete" title="Удалить" @click = "emit('delete')">
+          <button type="button" class="btn btn-light order-item__btn-delete" title="Удалить" @click = "emit('delete', {
+            type: 'order',
+            data: order,
+          })">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
               <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
             </svg>

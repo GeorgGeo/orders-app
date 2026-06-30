@@ -2,9 +2,23 @@
 const props = defineProps({
   isOpenPopup: {
     type: Boolean,
-    // default: false,
+    default: false,
   },
-})
+  item: {
+    type: Object,
+    default: null,
+  }
+});
+
+const emit = defineEmits(['close', 'confirm']);
+
+const closePopup = () => {
+  emit('close');
+};
+
+const confirmDelete = () => {
+  emit('confirm');
+}
 </script>
 
 <template>
@@ -29,7 +43,7 @@ const props = defineProps({
 
                 <!-- Карточка с данными -->
                 <div class="popup__card border p-3 rounded-3 bg-light">
-                  <p class="popup__card-title fw-bold mb-1">Название</p>
+                  <p class="popup__card-title fw-bold mb-1">{{ props.item?.data?.title }}</p>
                 </div>
               </div>
 
