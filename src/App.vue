@@ -2,21 +2,29 @@
 // import { RouterView } from 'vue-router'
 // import Sidebar from '@/components/SideBar.vue'
 // import TopMenu from '@/components/TopMenu.vue'
+import { ref, onMounted } from 'vue'
+import axios from 'axios';
+
 import HeaderVue from '@/components/HeaderVue.vue';
 import OrderList from './components/OrderList.vue';
 // import orders from '@/data/orders'; // массив из 3 заказов
 // import products from './data/products'; // массив из 2 продуктов
 // Делаем копии
-import ordersData from '@/data/orders';
-import productsData from './data/products';
+// import ordersData from '@/data/orders';
+// import productsData from './data/products';
 
-import { ref } from 'vue'
 import PopupView from './components/PopupView.vue';
 import ProductList from './components/ProductList.vue';
 import NavigationMenu from './components/NavigationMenu.vue';
 
-const orders = ref([...ordersData]);
-const products = ref([...productsData]);
+// const MOCK_API_URL = "https://mockapi.io/projects/6a43dfef6dba791499ab86d6";
+const MOCK_API_URL_ORDER = "https://6a43dfef6dba791499ab86d5.mockapi.io/orders";
+const MOCK_API_URL_PRODUCT = "https://6a43dfef6dba791499ab86d5.mockapi.io/products";
+
+// const orders = ref([...ordersData]);
+// const products = ref([...productsData]);
+const orders = ref([]);
+const products = ref([]);
 
 const selectedItem = ref(null); // Храним выбранный объект при удалении
 
@@ -38,34 +46,84 @@ const openPopup = (item) => {
 const closePopup = () => {
   isOpenModalPopup.value = false;
 }
-const confirmDelete = () => {
+const confirmDelete = async () => {
+  console.log("ConfirmDelete");
+  console.log('SelectedItem.value:', selectedItem.value);
+  console.log('SelectedItem.value.data.id', selectedItem.value.data.id);
+  console.log('typeof selectedItem.value.data.id', typeof selectedItem.value.data.id);
   if (!selectedItem.value) return;
   // console.log('Удаление подтверждено');
   // isOpenModalPopup.value = false;
   if (selectedItem.value.type === 'order') {
     // удаляем заказ
-    orders.value = orders.value.filter(
-      order => order.id !== selectedItem.value.data.id
-    );
+    // orders.value = orders.value.filter(
+    //   order => order.id !== selectedItem.value.data.id
+    // );
+    
     // удаляем все продукты этого заказа
+    // products.value = products.value.filter(
+    //   product => product.order !== selectedItem.value.data.id
+    // );
+    const orderProducts = products.value.filter(
+      product => product.order === selectedItem.value.data.id
+    );
+
+    for (const product of orderProducts) {
+      // await axios.delete(`${MOCK_API_URL_PRODUCT}/${product.id}`)
+      //   .then(response => {
+      //     console.log('Продукт успешно удален:', response.data);
+      //   })
+      //   .catch(error => {
+      //     console.error('Ошибка при удалении продукта:', error);
+      // });
+      try {
+        const response = await axios.delete(`${MOCK_API_URL_PRODUCT}/${product.id}`);
+        console.log('Продукт успешно удален:', response.data);
+      } catch (error) {
+        console.error('Ошибка при удалении продукта:', error);
+      }
+    };
+    console.log('Axios Delete Order', `${MOCK_API_URL_ORDER}/${selectedItem.value.data.id}`);
+    // await axios.delete(`${MOCK_API_URL_ORDER}/${selectedItem.value.data.id}`)
+      // .then(response => {
+      //   console.log('Заказ успешно удален:', response.data);
+      //   // Обновляем список заказов после удаления
+      //   fetchOrders();
+      // })
+      // .catch(error => {
+      //   console.error('Ошибка при удалении заказа:', error);
+    // });
+      try {
+        const response = await axios.delete(`${MOCK_API_URL_ORDER}/${selectedItem.value.data.id}`);
+        console.log('Заказ успешно удален:', response.data);
+      } catch (error) {
+        console.error('Ошибка при удалении заказа:', error);
+      }
+
+    await fetchOrders();
+    await fetchProducts();
+
+  } else if (selectedItem.value.type === 'product') {
+    // удаляем только выбранный продукт
     // products.value = products.value.filter(
     //   product => product.id !== selectedItem.value.data.id
     // );
-    products.value = products.value.filter(
-      product => product.order !== selectedItem.value.data.id
-    );
-  } else if (selectedItem.value.type === 'product') {
-    // удаляем только выбранный продукт
-    products.value = products.value.filter(
-      product => product.id !== selectedItem.value.data.id
-    );
+    console.log('Axios Delete Product', `${MOCK_API_URL_PRODUCT}/${selectedItem.value.data.id}`);
+    try {
+      const response = await axios.delete(`${MOCK_API_URL_PRODUCT}/${selectedItem.value.data.id}`);
+      console.log('Продукт успешно удален:', response.data);
+      // Обновляем список продуктов после удаления
+      fetchProducts();
+    } catch (error) {
+      console.error('Ошибка при удалении продукта:', error);
+    }
   }
 
   selectedItem.value = null;
   isOpenModalPopup.value = false;
 }
 
-const addProduct = () => {
+const addProduct = async () => {
   const newProduct = {
     id: Date.now(),
     title: 'Product 3',
@@ -83,8 +141,54 @@ const addProduct = () => {
     ]
   }
 
-  products.value.push(newProduct);
+  // products.value.push(newProduct);
+  await axios.post(MOCK_API_URL_PRODUCT, newProduct)
+    .then(response => {
+      console.log('Продукт успешно добавлен:', response.data);
+      // Обновляем список продуктов после добавления
+      fetchProducts();
+    })
+    .catch(error => {
+      console.error('Ошибка при добавлении продукта:', error);
+    });
+
 }
+
+const fetchOrders = async () => {
+  try {
+    const response = await axios.get(MOCK_API_URL_ORDER);
+    orders.value = response.data;
+    console.log('Заказы успешно загружены:', orders.value);
+  } catch (error) {
+    console.error('Ошибка при загрузке заказов:', error);
+  }
+};
+
+const fetchProducts = async () => {
+  try {
+    const response = await axios.get(MOCK_API_URL_PRODUCT);
+    products.value = response.data;
+    console.log('Продукты успешно загружены:', products.value);
+  } catch (error) {
+    console.error('Ошибка при загрузке продуктов:', error);
+  }
+};
+
+onMounted(() => {
+  fetchOrders();
+  fetchProducts();
+});
+
+  // axios.get('https://6a43dfef6dba791499ab86d5.mockapi.io/orders')
+  // .then(response => {
+  //   orders.value = response.data;
+  //   console.log('Заказы успешно загружены:', orders.value);
+  //   console.log(response);
+  // })
+  // .catch(error => {
+  //   console.error('Ошибка при загрузке заказов:', error);
+  // });
+//!!! Например после удаления можно просто вызвать await fetchProducts(); и список обновится.
 </script>
 
 <template>

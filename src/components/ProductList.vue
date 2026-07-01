@@ -1,11 +1,11 @@
 <script setup>
 // import OrderItem from './OrderItem.vue';
 // import { ref } from 'vue';
- import { computed } from 'vue';
+ import {  ref, computed } from 'vue';
 
 // const showForm = ref(false);
-// const selectedType = ref('');
-// const selectedSpec = ref('');
+const selectedType = ref('');
+const selectedSpec = ref('');
 
 const props = defineProps({
   orders: Array,
@@ -16,6 +16,16 @@ const emit = defineEmits(['delete', 'add-order']); // Принимаем соб�
 
 const productCount = computed(() => props.products.length);
 console.log('productCount:', productCount.value);
+
+const getUSD = (product) => {
+  const usd = product.price?.find(p => p.symbol === 'USD');
+  return Number(usd?.value || 0);
+};
+
+const getUAH = (product) => {
+  const uah = product.price?.find(p => p.symbol === 'UAH');
+  return Number(uah?.value || 0);
+};
 
 // const getProducts = (orderId) => {
 //   const result = props.products.filter(p => p.order === orderId);
@@ -56,8 +66,8 @@ const addOrder = () => {
               <p class="card-text my-0">{{ product.guarantee.start }}</p>
             </div>
             <div class="order-item__price-block">
-              <p class="card-text my-0">{{ formattedUSD }}</p>
-              <p class="card-text my-0">{{ formattedUAH }}</p>
+              <p class="card-text my-0">{{ getUSD(product).toFixed(2) }} $</p>
+              <p class="card-text my-0">{{ getUAH(product).toFixed(2) }} ₴</p>
             </div>
             <p class="card-text my-0">{{ product.date }}</p>
             <!-- <a href="#" class="card-link">Card link</a>

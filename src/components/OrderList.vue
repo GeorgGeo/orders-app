@@ -23,7 +23,7 @@ const totalUSD = computed(() => {
     const usd = product.price.find(price => price.symbol === 'USD');
     console.log(usd);
 
-    return sum + (usd ? usd.value : 0);
+    return sum + Number(usd ? usd.value : 0);
   }, 0);
 });
 
@@ -32,12 +32,18 @@ const totalUAH = computed(() => {
         const uah = product.price.find(
             price => price.symbol === "UAH"
         );
-        return sum + (uah ? uah.value : 0);
+        return sum + Number(uah ? uah.value : 0);
     }, 0);
 });
 
-const formattedUSD = computed(() => `${totalUSD.value.toFixed(2)} $`);
-const formattedUAH = computed(() => `${totalUAH.value.toFixed(2)} UAH`);
+// const formattedUSD = computed(() => `${totalUSD.value.toFixed(2)} $`);
+// const formattedUAH = computed(() => `${totalUAH.value.toFixed(2)} UAH`);
+const formattedUSD = computed(() => {
+  return `${Number(totalUSD.value || 0).toFixed(2)} $`;
+});
+const formattedUAH = computed(() => {
+  return `${Number(totalUAH.value || 0).toFixed(2)} UAH`;
+});
 
 const productCount = computed(() => props.products.length);
 
