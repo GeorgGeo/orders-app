@@ -8,10 +8,27 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
     <title>DZENCODE-TEST</title>
-    <script type="module" crossorigin src="/orders-app/assets/index-HJuNuoET.js"></script>
-    <link rel="stylesheet" crossorigin href="/orders-app/assets/index-CFP3agrz.css">
+    <script type="module" crossorigin src="/orders-app/assets/index-BCFOwV79.js"></script>
+    <link rel="stylesheet" crossorigin href="/orders-app/assets/index-D8VCiHpN.css">
   </head>
   <body>
     <div id="app"></div>
+    <!-- This is a simple 404 page for SPA routing -->
+     <script>
+      (function (l) {
+        if (l.search[1] === '/') {
+          const decoded = l.search
+            .slice(1)
+            .replace(/~and~/g, '&');
+
+          window.history.replaceState(
+            null,
+            '',
+            decoded + l.hash
+          );
+        }
+      })(window.location);
+    </script>
+    <!--  -->
   </body>
 </html>
