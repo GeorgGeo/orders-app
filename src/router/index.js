@@ -25,6 +25,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import OrdersView from '@/views/OrdersView.vue'
 import ProductsView from '@/views/ProductsView.vue'
+import HomeView from '@/views/HomeView.vue'
 
 const routes = [
   {
@@ -47,24 +48,25 @@ const routes = [
   {
     path: '/groups',
     name: 'groups',
-    component: OrdersView,
+    component: HomeView,
   }, // временная заглушка
 
   {
     path: '/users',
     name: 'users',
-    component: OrdersView,
+    component: HomeView,
   }, // временная заглушка
 
   {
     path: '/settings',
     name: 'settings',
-    component: OrdersView,
+    component: HomeView,
   } // временная заглушка
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
+  // history: createWebHistory(),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes,
 })
 

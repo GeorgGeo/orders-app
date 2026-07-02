@@ -1,9 +1,23 @@
 <script setup>
+import OrderList from '@/components/OrderList.vue'
+
+defineProps({
+    orders: Array,
+    products: Array
+})
+
+const emit = defineEmits([
+    'delete'
+])
 </script>
 
 <template>
   <div>
-    <h1>OrdersView</h1>
+    <OrderList
+    :orders="orders"
+    :products="products"
+    @delete="emit('delete',$event)"
+    />
   </div>
 </template>
 

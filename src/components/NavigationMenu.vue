@@ -1,20 +1,28 @@
 <script setup>
 import { ref } from 'vue';
+import { RouterLink } from 'vue-router';
 import avatar from '@/assets/images/avatar.png'
 
 const props = defineProps({
   modelValue: Number,
 })
 
+// const menuItems = ref([
+//   { id: 1, title: 'ПРИХОД', path: '/orders', active: true },
+//   { id: 2, title: 'ГРУППЫ', path: '/groups', active: false },
+//   { id: 3, title: 'ПРОДУКТЫ', path: '/products', active: false },
+//   { id: 4, title: 'ПОЛЬЗОВАТЕЛИ', path: '/users', active: false },
+//   { id: 5, title: 'НАСТРОЙКИ', path: '/settings', active: false }
+// ]);
 const menuItems = ref([
-  { id: 1, title: 'ПРИХОД', path: '/orders', active: true },
-  { id: 2, title: 'ГРУППЫ', path: '/groups', active: false },
-  { id: 3, title: 'ПРОДУКТЫ', path: '/products', active: false },
-  { id: 4, title: 'ПОЛЬЗОВАТЕЛИ', path: '/users', active: false },
-  { id: 5, title: 'НАСТРОЙКИ', path: '/settings', active: false }
-])
+  { id: 1, title: 'ПРИХОД', path: '/orders' },
+  { id: 2, title: 'ГРУППЫ', path: '/groups' },
+  { id: 3, title: 'ПРОДУКТЫ', path: '/products' },
+  { id: 4, title: 'ПОЛЬЗОВАТЕЛИ', path: '/users' },
+  { id: 5, title: 'НАСТРОЙКИ', path: '/settings' }
+]);
 
-const emit = defineEmits(['update:modelValue']);
+// const emit = defineEmits(['update:modelValue']);
 </script>
 
 <template>
@@ -32,9 +40,10 @@ const emit = defineEmits(['update:modelValue']);
       <!-- sidebar__profile -->
       <nav class="sidebar__nav">
         <ul class="nav-underline">
-          <li v-for="item in menuItems" :key="item.id" class="tab" :class="{ 'tab--active' : props.modelValue === item.id}" @click="emit('update:modelValue', item.id)">
-            <!-- <router-link :to="item.path" class="sidebar__link" :class="{ 'sidebar__link--active': item.active }">{{ item.title }}</router-link> -->
-            <span class="sidebar__link" :class="{ 'sidebar__link--active': props.modelValue === item.id }">{{ item.title }}</span>
+          <!-- <li v-for="item in menuItems" :key="item.id" class="tab" :class="{ 'tab--active' : props.modelValue === item.id}" @click="emit('update:modelValue', item.id)"> -->
+          <li v-for="item in menuItems" :key="item.id" class="tab" :class="{ 'tab--active' : props.modelValue === item.id}" >
+            <!-- <span class="sidebar__link" :class="{ 'sidebar__link--active': props.modelValue === item.id }">{{ item.title }}</span> -->
+             <RouterLink :to="item.path" class="sidebar__link" active-class="sidebar__link--active" >{{ item.title }}</RouterLink>
           </li>
         </ul>
         <!--  -->

@@ -1,9 +1,25 @@
 <script setup>
+import ProductList from '@/components/ProductList.vue'
+
+defineProps({
+    orders: Array,
+    products: Array
+})
+
+const emit = defineEmits([
+    'delete',
+    'add-order'
+])
 </script>
 
 <template>
   <div>
-    <h1>ProductsView</h1>
+    <ProductList
+    :orders="orders"
+    :products="products"
+    @delete="emit('delete',$event)"
+    @add-order="emit('add-order')"
+    />
   </div>
 </template>
 

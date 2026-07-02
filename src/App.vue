@@ -1,12 +1,12 @@
 <script setup>
-// import { RouterView } from 'vue-router'
+import { RouterView } from 'vue-router'
 // import Sidebar from '@/components/SideBar.vue'
 // import TopMenu from '@/components/TopMenu.vue'
 import { ref, onMounted } from 'vue'
 import axios from 'axios';
 
 import HeaderVue from '@/components/HeaderVue.vue';
-import OrderList from './components/OrderList.vue';
+// import OrderList from './components/OrderList.vue';
 // import orders from '@/data/orders'; // массив из 3 заказов
 // import products from './data/products'; // массив из 2 продуктов
 // Делаем копии
@@ -14,7 +14,7 @@ import OrderList from './components/OrderList.vue';
 // import productsData from './data/products';
 
 import PopupView from './components/PopupView.vue';
-import ProductList from './components/ProductList.vue';
+// import ProductList from './components/ProductList.vue';
 import NavigationMenu from './components/NavigationMenu.vue';
 
 // const MOCK_API_URL = "https://mockapi.io/projects/6a43dfef6dba791499ab86d6";
@@ -23,8 +23,31 @@ const MOCK_API_URL_PRODUCT = "https://6a43dfef6dba791499ab86d5.mockapi.io/produc
 
 // const orders = ref([...ordersData]);
 // const products = ref([...productsData]);
+const fallbackOrders = [
+  {
+    id: 1,
+    title: "Fallback Order 1",
+    date: "2026-01-01"
+  },
+  {
+    id: 2,
+    title: "Fallback Order 2",
+    date: "2026-01-02"
+  }
+]
+
+const fallbackProducts = [
+  {
+    id: 1,
+    title: "Fallback Product 1",
+    type: "Monitor",
+    order: 1
+  }
+]
 const orders = ref([]);
 const products = ref([]);
+
+const isLoading = ref(false);
 
 const selectedItem = ref(null); // Храним выбранный объект при удалении
 
@@ -36,7 +59,7 @@ const selectedItem = ref(null); // Храним выбранный объект 
 //   { id: 5, title: 'НАСТРОЙКИ', path: '/settings', active: false }
 // ])
 
-const activeTab = ref(1); // Default active tab
+// const activeTab = ref(1); // Default active tab
 const isOpenModalPopup = ref(false);
 // Методы для управления попапом
 const openPopup = (item) => {
@@ -161,6 +184,9 @@ const fetchOrders = async () => {
     console.log('Заказы успешно загружены:', orders.value);
   } catch (error) {
     console.error('Ошибка при загрузке заказов:', error);
+    // FALLBACK
+    console.warn('Используем fallback orders, если упал MockApi')
+    orders.value = fallbackOrders
   }
 };
 
@@ -171,41 +197,34 @@ const fetchProducts = async () => {
     console.log('Продукты успешно загружены:', products.value);
   } catch (error) {
     console.error('Ошибка при загрузке продуктов:', error);
+    // FALLBACK
+    console.warn('Используем fallback products, если упал MockApi')
+    products.value = fallbackProducts
   }
 };
 
-onMounted(() => {
-  fetchOrders();
-  fetchProducts();
+onMounted(async () => {
+  isLoading.value = true;
+
+  try {
+    await Promise.all([fetchOrders(), fetchProducts()]);
+  } finally {
+    isLoading.value = false;
+  }
+  // fetchOrders();
+  // fetchProducts();
 });
 
-  // axios.get('https://6a43dfef6dba791499ab86d5.mockapi.io/orders')
-  // .then(response => {
-  //   orders.value = response.data;
-  //   console.log('Заказы успешно загружены:', orders.value);
-  //   console.log(response);
-  // })
-  // .catch(error => {
-  //   console.error('Ошибка при загрузке заказов:', error);
-  // });
-//!!! Например после удаления можно просто вызвать await fetchProducts(); и список обновится.
 </script>
 
 <template>
   <div>
-    <!-- <div class="app-layout">
-      <SideBarVue />
-
-      <div class="content">
-        <TopMenuVue />
-
-        <RouterView />
-      </div>
-    </div> -->
+    <div v-if="isLoading" class="text-center p-5">Загрузка данных...</div>
     <HeaderVue />
     <main class="app">
       <div class="app__body d-flex flex-column flex-md-row">
-        <NavigationMenu v-model="activeTab" />
+        <!-- <NavigationMenu v-model="activeTab" /> -->
+        <NavigationMenu />
         
         <!-- sidebar -->
         <div class="main col-12 col-md-9 col-lg-10 p-3 position-relative">
@@ -216,8 +235,9 @@ onMounted(() => {
             <div v-if="activeTab === 4">Контент ПОЛЬЗОВАТЕЛИ</div>
             <div v-if="activeTab === 5">Контент НАСТРОЙКИ</div>
           </div> -->
-          <OrderList v-if="activeTab === 1" :orders="orders" :products="products" @delete="openPopup" />
-          <ProductList v-if="activeTab === 2 || activeTab === 3" :orders="orders" :products="products" @delete="openPopup" @add-order="addProduct" />
+          <!-- <OrderList v-if="activeTab === 1" :orders="orders" :products="products" @delete="openPopup" />
+          <ProductList v-if="activeTab === 2 || activeTab === 3" :orders="orders" :products="products" @delete="openPopup" @add-order="addProduct" /> -->
+          <RouterView :orders="orders" :products="products" @delete="openPopup" @add-order="addProduct" />
           <!--  -->
           <PopupView :is-open-popup="isOpenModalPopup" @close="closePopup" @confirm="confirmDelete" :item="selectedItem" />
         </div>
