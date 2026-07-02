@@ -1,6 +1,9 @@
 <script setup>
 //start Header => TopMenu => date and time logic
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { socket } from '@/services/socket.js';
+
+const activeUsers = ref(0);
 
 const currentDateTime = ref(new Date());
 
@@ -21,16 +24,29 @@ const formattedTime = computed(() => {
 })
 
 let intervalId = null;
+
+const handleActiveUsers = (count) => {
+  activeUsers.value = count;
+};
+
 onMounted(() => {
   intervalId = setInterval(() => {
     currentDateTime.value = new Date();
   }, 1000);
+
+  // socket.on('activeUsers', (count) => {
+  //   activeUsers.value = count;
+  // });
+  socket.on('activeUsers', handleActiveUsers);
 })
 
 onUnmounted(() => {
   if (intervalId) {
     clearInterval(intervalId);
   }
+
+  // socket.off('activeUsers');
+  socket.off('activeUsers', handleActiveUsers);
 })
 // end Header => TopMenu => date and time logic
 </script>
@@ -40,6 +56,9 @@ onUnmounted(() => {
     <div class="col-auto ms-auto order-2 order-lg-3">
       <div class="header_datetime">
         <div class="header__date-block d-flex align-items-end gap-3">
+          <div class="active-users">
+            👥 {{ activeUsers }}
+          </div>
           <div class="header__day-date">
             <div class="header__day">{{ formattedDay }}</div>
             <div class="header__date">{{ formattedDate }}</div>
