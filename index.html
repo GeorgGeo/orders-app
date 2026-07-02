@@ -11,6 +11,23 @@
   </head>
   <body>
     <div id="app"></div>
+    <!-- This is a simple 404 page for SPA routing -->
+     <script>
+      (function (l) {
+        if (l.search[1] === '/') {
+          const decoded = l.search
+            .slice(1)
+            .replace(/~and~/g, '&');
+
+          window.history.replaceState(
+            null,
+            '',
+            decoded + l.hash
+          );
+        }
+      })(window.location);
+    </script>
+    <!--  -->
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

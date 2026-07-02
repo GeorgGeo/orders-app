@@ -228,13 +228,6 @@ onMounted(async () => {
         
         <!-- sidebar -->
         <div class="main col-12 col-md-9 col-lg-10 p-3 position-relative">
-          <!-- <div class="tab-content">
-            <div v-if="activeTab === 1">Контент ПРИХОД — список заказов</div>
-            <div v-if="activeTab === 2">Контент ГРУППЫ</div>
-            <div v-if="activeTab === 3">Контент ПРОДУКТЫ</div>
-            <div v-if="activeTab === 4">Контент ПОЛЬЗОВАТЕЛИ</div>
-            <div v-if="activeTab === 5">Контент НАСТРОЙКИ</div>
-          </div> -->
           <!-- <OrderList v-if="activeTab === 1" :orders="orders" :products="products" @delete="openPopup" />
           <ProductList v-if="activeTab === 2 || activeTab === 3" :orders="orders" :products="products" @delete="openPopup" @add-order="addProduct" /> -->
           <RouterView :orders="orders" :products="products" @delete="openPopup" @add-order="addProduct" />
