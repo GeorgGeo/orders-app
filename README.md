@@ -1,44 +1,77 @@
-# orders-app
+# Orders App
 
-This template should help get you started developing with Vue 3 in Vite.
+Тестовое задание, выполненное на Vue 3 + Vite.
 
-## Recommended IDE Setup
+## Возможности
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+- Просмотр списка заказов
+- Просмотр списка продуктов
+- Создание заказа
+- Удаление заказа
+- Работа с MockAPI
+- Обновление данных в реальном времени через Socket.IO
+- Маршрутизация с Vue Router
+- Docker-поддержка приложения
 
-## Recommended Browser Setup
+## Технологии
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+- Vue 3
+- Vite
+- Vue Router
+- Vuex
+- Axios
+- Bootstrap 5
+- Socket.IO Client
+- MockAPI
+- Docker
 
-## Customize configuration
+## Запуск проекта
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+Установка зависимостей
 
-## Project Setup
-
-```sh
+```bash
 npm install
 ```
 
-### Compile and Hot-Reload for Development
+Запуск в режиме разработки
 
-```sh
+```bash
 npm run dev
 ```
 
-### Compile and Minify for Production
+Сборка проекта
 
-```sh
+```bash
 npm run build
 ```
 
-### Lint with [ESLint](https://eslint.org/)
+## Запуск через Docker
 
-```sh
-npm run lint
+Сборка Docker-образа
+
+```bash
+docker build -t orders-app .
 ```
+
+Запуск контейнера
+
+```bash
+docker run -p 5173:5173 orders-app
+```
+
+После запуска приложение будет доступно по адресу
+
+```
+http://localhost:5173
+```
+
+## Ссылки
+
+GitHub Repository
+
+https://github.com/GeorgGeo/orders-app
+
+GitHub Pages
+
+https://georggeo.github.io/orders-app/
+
